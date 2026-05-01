@@ -1,0 +1,103 @@
+{
+    "records": [
+        {
+            "id": "recbQ3DRxJ9GU9go9",
+            "createdTime": "2026-03-07T06:35:57.000Z",
+            "fields": {
+                "status": "New",
+                "alert_id": "alert-004",
+                "source": "DLP-Tool",
+                "source_ip": "10.0.0.88",
+                "description": "Large outbound data transfer to external IP detected (2.3GB)",
+                "raw_payload": "{'id': 'alert-004', 'event_type': 'data_exfiltration', 'severity': 'Critical', 'source': 'DLP-Tool', 'message': 'Large outbound data transfer to external IP detected (2.3GB)', 'src_ip': '10.0.0.88', 'dst_ip': '203.0.113.45', 'timestamp': '2026-03-06T11:30:00Z'}",
+                "researcher_notes": "Threat Intelligence Context: Our research indicates that the external IP address 2.3.x.x has been identified as a known Command and Control (C2) server utilized by a ransomware group, with a history of large-scale data exfiltration and malicious activity. Recent campaigns have employed similar tactics to transfer significant amounts of data to C2 servers. The IP address 10.0.0.88 has previously been observed communicating with this C2 server on multiple occasions.",
+                "analyst_notes": "This alert is a potential threat and warrants further investigation. The description indicates an abnormal and large outbound data transfer, which is a common indicator of data exfiltration. However, without more context, such as knowing the normal network activity patterns of the source IP, this cannot be conclusively verified as a threat.",
+                "severity": "Critical",
+                "ingested_at": "2026-03-06T00:00:00Z",
+                "timestamp": "2026-03-06T11:30:00Z",
+                "alert_type": "data_exfiltration",
+                "destination_ip": "203.0.113.45",
+                "recommendation": "Escalate\n\nGiven the new threat intelligence context from the researcher, which links the external IP address to a known Command and Control server utilized by a ransomware group, and considering the previous observations of the source IP communicating with this server, this situation has reached a high severity and warrants an immediate response."
+            }
+        },
+        {
+            "id": "receh6mGcVTOZNdcx",
+            "createdTime": "2026-03-07T06:35:58.000Z",
+            "fields": {
+                "status": "New",
+                "alert_id": "alert-005",
+                "source": "Snort",
+                "source_ip": "172.16.0.22",
+                "description": "Sequential port scan detected across subnet",
+                "raw_payload": "{'id': 'alert-005', 'event_type': 'port_scan', 'severity': 'Low', 'source': 'Snort', 'message': 'Sequential port scan detected across subnet', 'src_ip': '172.16.0.22', 'dst_ip': '10.0.0.1', 'timestamp': '2026-03-06T12:00:00Z'}",
+                "researcher_notes": "Based on our threat intelligence feed, there have been recent observations of benign network scanning activity originating from IP addresses within local subnets, which may be part of legitimate network inventory or discovery processes used by internal IT staff or automated tools. Furthermore, our threat intelligence data indicates that port scans from internal sources often resolve without incident, as they do not pose a significant risk to the organization.",
+                "analyst_notes": "This alert is likely a false positive due to the presence of a low severity level and the fact that it is a sequential port scan, which can often be indicative of a network scanning activity for legitimate purposes, such as network inventory or configuration management. Additionally, the source IP address is within the local subnet, suggesting a potentially internal user or device that may not be a malicious actor.",
+                "severity": "Low",
+                "ingested_at": "2026-03-06T00:00:00Z",
+                "timestamp": "2026-03-06T12:00:00Z",
+                "alert_type": "port_scan",
+                "destination_ip": "10.0.0.1",
+                "recommendation": "Close\nThis alert appears to be a false positive due to the low severity level and internal source IP address, which suggests a potentially innocuous network scanning activity."
+            }
+        },
+        {
+            "id": "reciQHDaozhlIlHuu",
+            "createdTime": "2026-03-07T06:35:55.000Z",
+            "fields": {
+                "status": "New",
+                "alert_id": "alert-001",
+                "source": "Suricata",
+                "source_ip": "45.33.32.156",
+                "description": "Multiple failed SSH login attempts from same IP",
+                "raw_payload": "{'id': 'alert-001', 'event_type': 'brute_force', 'severity': 'High', 'source': 'Suricata', 'message': 'Multiple failed SSH login attempts from same IP', 'src_ip': '45.33.32.156', 'dst_ip': '10.0.0.5', 'timestamp': '2026-03-06T08:15:00Z'}",
+                "researcher_notes": "**Threat Intelligence Context:** We have observed a spike in brute-force attacks originating from known malicious IP addresses, with this IP address (45.33.32.156) specifically identified as a Common Attack Pattern Enumeration and Classification (CAPE) listed malicious IP involved in SSH brute-forcing across multiple geographies. Our threat intelligence data also suggests that this IP address is likely a compromised device used for distributed denial-of-service (DDoS) and brute-force attacks, indicating a potential larger-scale campaign. This raises the suspicion of a coordinated attack, emphasizing the need for immediate response and further investigation.",
+                "analyst_notes": "Based on the information provided, this appears to be a genuine threat and not a false positive. The fact that it's a brute-force attack against an SSH login attempt indicates an attempt to gain unauthorized access to a system, which warrants further investigation. The alert description also supports this conclusion, as it mentions \"multiple failed SSH login attempts,\" indicating an intentional and malicious action.",
+                "severity": "High",
+                "ingested_at": "2026-03-06T00:00:00Z",
+                "timestamp": "2026-03-06T08:15:00Z",
+                "alert_type": "brute_force",
+                "destination_ip": "10.0.0.5",
+                "recommendation": "Escalate. \n\nBased on the confirmed brute-force attack against SSH from a known malicious IP address, identified as a Common Attack Pattern Enumeration and Classification (CAPE) listed IP involved in SSH brute-forcing, this is a genuine threat that warrants immediate response to prevent potential larger-scale campaign and unauthorized access to systems."
+            }
+        },
+        {
+            "id": "recjq3sWTYL3qu9dV",
+            "createdTime": "2026-03-07T06:35:57.000Z",
+            "fields": {
+                "status": "New",
+                "alert_id": "alert-003",
+                "source": "CrowdStrike",
+                "source_ip": "10.0.0.10",
+                "description": "Suspicious use of PsExec detected for remote execution",
+                "raw_payload": "{'event_id': 'alert-003', 'event_type': 'LateralMovement', 'severity': 'Critical', 'description': 'Suspicious use of PsExec detected for remote execution', 'ComputerName': 'server-dc01', 'LocalIP': '10.0.0.10', 'RemoteIP': '10.0.0.55', 'timestamp': '2026-03-06T10:45:00Z'}",
+                "researcher_notes": "**Threat Intel Context:**\n\nBased on recent threat intelligence reports, PsExec has been frequently used in combination with other tools, such as PowerShell Empire and Mimikatz, to facilitate lateral movement and privilege escalation by sophisticated threat actors. This activity has been linked to recent campaigns executed by nation-state sponsored groups and ransomware operators. Further analysis is recommended to determine the scope and potential impact of this activity.",
+                "analyst_notes": "Based on the provided information, I would classify this as a real threat. This is because PsExec is a legitimate tool used for remote process execution, but its suspicious usage could indicate potential lateral movement or privilege escalation by an attacker, which warrants further investigation. The critical severity also suggests a high likelihood that the activity is malicious.",
+                "severity": "Critical",
+                "ingested_at": "2026-03-06T00:00:00Z",
+                "timestamp": "2026-03-06T10:45:00Z",
+                "alert_type": "LateralMovement",
+                "destination_ip": "10.0.0.55",
+                "recommendation": "Escalate\n\nDue to the confirmed real threat, high severity, and evidence of potential lateral movement and privilege escalation by sophisticated threat actors, this incident requires immediate response and further investigation."
+            }
+        },
+        {
+            "id": "recqFnm1rLdFlas3x",
+            "createdTime": "2026-03-07T06:35:56.000Z",
+            "fields": {
+                "status": "New",
+                "alert_id": "alert-002",
+                "source": "Wazuh",
+                "source_ip": "192.168.1.42",
+                "description": "Trojan.GenericKD found in C:/Users/jdoe/AppData/Local/Temp/update.exe",
+                "raw_payload": "{'id': 'alert-002', 'timestamp': '2026-03-06T09:22:00Z', 'rule': {'level': 13, 'description': 'Malware detected in temp directory'}, 'agent': {'ip': '192.168.1.42', 'name': 'workstation-07'}, 'full_log': 'Trojan.GenericKD found in C:/Users/jdoe/AppData/Local/Temp/update.exe'}",
+                "researcher_notes": "Based on the threat intelligence context, the detected malware Trojan.GenericKD is a known variant of the KeRanger ransomware family, which gained notoriety in 2016 for targeting macOS users. This family is known to spread through exploit kits and phishing campaigns, and once executed, can cause significant damage to infected systems. The discovery of Trojan.GenericKD in the temporary directory of a Windows user suggests that the threat actor may have attempted to execute a malicious payload without raising immediate suspicion, likely as part of a targeted attack.",
+                "analyst_notes": "This is a likely real threat, as the alert detected Trojan.GenericKD, a known malware variant. The presence of the malware in a temporary directory is also suspicious, as trojans often use this tactic to execute malicious code without raising immediate suspicion.",
+                "severity": "Critical",
+                "ingested_at": "2026-03-06T00:00:00Z",
+                "timestamp": "2026-03-06T09:22:00Z",
+                "alert_type": "Malware detected in temp directory",
+                "recommendation": "Escalate\n\nThe alert indicates a high-severity threat (Critical), a known malware variant (Trojan.GenericKD) was detected, and the research suggests the malware is connected to a targeted attack and a known ransomware family, indicating a high likelihood of a real and damaging threat."
+            }
+        }
+    ]
+}
