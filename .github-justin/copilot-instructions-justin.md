@@ -34,7 +34,7 @@
 | destination_ip | single_line_text | Ingestion | - |
 | timestamp | date_time | Ingestion | - |
 | raw_payload | long_text | Ingestion | - |
-| status | single_select | Ingestion | New, In Progress, Resolved |
+| status | single_select | Ingestion | New, In Progress, Analyzed |
 | ingested_at | date_time | Ingestion | - |
 | recommendation | long_text | Analysis | - |
 | analysis_notes | long_text | Analysis | - |
@@ -50,10 +50,10 @@
 - Severity levels: high, critical, medium, low
 
 ## Current State
-- **What's working:** What is already built and tested was the n8n workflow for the Ingestion component for the two nodes. What was also already built and tested was the AI models for analysis in the second component and also the fourth component with the dashboard that was also tested and built.  
-- **What's in progress:** What is currently being built right now is the n8n workflow for the third component that is still needed. 
-- **Known issues:** The only problem we had was creating the webhook for the first component. The webhook would function but it would only call one alert instead of all of them.
-- **Next milestone:** Checkpoint 2 (Week 9) — one record end-to-end through all components.
+- **What's working:** The Ingestion component (n8n workflow with Python code node and Airtable update), AI Core (Analysis) component (3 AI models providing recommendation, analysis_notes, and researcher_notes), Integration (Monitoring) component (Streamlit dashboard), and the automatic handoff between Ingestion and AI Core.
+- **What's in progress:** The Specialist (Action) component n8n workflow for ticket creation is still not implemented.
+- **Known issues:** Webhook in Ingestion only processes one alert at a time; field name inconsistency (using 'analyst_notes' instead of 'analysis_notes'); status values not explicitly defined in schema (should be lowercase: new, analyzed, in_progress, resolved); untested handoff between AI Core and Specialist; end-to-end automation not fully confirmed.
+- **Next milestone:** Checkpoint 2 (Week 9) — one record end-to-end through all components without manual intervention.
 
 ## Repository Structure
 AI-Capstone-Security-Alert-Triage-Bot/
@@ -83,3 +83,9 @@ AI-Capstone-Security-Alert-Triage-Bot/
         │   └── comparison-table.csv
         └── teachable-machine/
             └── screenshots/
+
+## Recent Updates (May 2026)
+- **Checkpoint 2 Assessment:** Conducted readiness assessment revealing AT RISK status due to unimplemented Specialist component and untested handoffs.
+- **What's working now:** Confirmed automatic handoff between Ingestion and AI Core; all three working components (Ingestion, AI Core, Integration) tested and producing correct output.
+- **New issues revealed:** Field name inconsistency (`analyst_notes` used instead of `analysis_notes`); status values need explicit definition (new, analyzed, in_progress, resolved); end-to-end automation requires verification.
+- **Schema changes:** Corrected `ticked_url` to `ticket_url`; standardized severity and status values to lowercase per conventions; added intermediate status values for handoffs.
