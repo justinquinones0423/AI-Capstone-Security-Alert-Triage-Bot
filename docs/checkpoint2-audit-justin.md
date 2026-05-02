@@ -1,7 +1,7 @@
 # Checkpoint 2 Readiness Assessment
 
 **Project:** Security Alert Triage Bot  
-**Date:** April 26, 2026  
+**Date:** May 1, 2026  
 **Checkpoint:** Week 9 — End-to-End Record Flow  
 **Assessment:** AT RISK
 
@@ -9,9 +9,9 @@
 
 ## Executive Summary
 
-This document provides a readiness assessment for Checkpoint 2, which requires one complete record to flow through all 4 components (Ingestion → AI Core → Action → Monitoring) without manual intervention.
+This document provides a readiness assessment for Checkpoint 2, which requires one complete record to flow through all 4 components (Ingestion → AI Core → Specialist → Integration) without manual intervention.
 
-**Status: AT RISK** — While 3 of 4 components are working, the critical gap is Component 3 (Action) has not been started, and automatic handoffs between components are not yet implemented.
+**Status: AT RISK** — While Ingestion, AI Core, and Integration components are working, the critical gap is the Specialist (Action) component has not been started, and the handoff from AI Core to Specialist has not been tested.
 
 ---
 
@@ -19,10 +19,10 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 | Component | Status | Details |
 |-----------|--------|---------|
-| **Ingestion** | ✅ Working | Python code node in n8n creates alert records in Airtable with all required fields |
-| **AI Core (Analysis)** | ✅ Working | 3 AI models (Groq, HuggingFace) analyze alerts and populate `recommendation`, `analysis_notes`, and `researcher_notes` fields |
-| **Monitoring** | ✅ Working | Streamlit dashboard displays triage volume, severity distribution, and response time metrics |
-| **Schema Consistency** | ✅ Verified | No field name mismatches detected between components |
+| **Ingestion** | ✅ Working | Tested and producing correct output, writing alerts to Airtable |
+| **AI Core (Analysis)** | ✅ Working | Tested and producing correct output, filling recommendation, analyst_notes, and researcher_notes fields |
+| **Integration (Monitoring)** | ✅ Working | Tested and producing correct output, displaying alerts on dashboard |
+| **Handoff: Ingestion → AI Core** | ✅ Working | Confirmed working - AI Core automatically analyzes alerts after Ingestion writes them |
 
 ---
 
@@ -30,41 +30,32 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 > Items that must be fixed before Checkpoint 2
 
-### 1. Action Component Not Started ⚠️
+### 1. Specialist (Action) Component Not Started ⚠️
 
 | Detail | Value |
 |--------|-------|
 | **Gap** | Component 3 (Specialist/Action) has zero implementation |
 | **Impact** | Cannot achieve end-to-end flow without this component |
 | **Owner** | Ujjwal Singh |
-| **Estimated Effort** | 2-4 hours |
+| **Estimated Effort** | 1-2 hours |
 
-### 2. No Automatic Handoffs ⚠️
+### 2. No Tested Handoff: AI Core → Specialist ⚠️
 
 | Detail | Value |
 |--------|-------|
-| **Gap** | Both Ingestion→AI Core and AI Core→Action require manual triggering |
+| **Gap** | The transition from Analysis to Action has not been tested or implemented |
 | **Impact** | Checkpoint 2 requirement is "without manual intervention" |
-| **Owner** | Alexander Lustig (AI Core), Ujjwal Singh (Action) |
-| **Estimated Effort** | 1-2 hours per handoff |
+| **Owner** | Ujjwal Singh |
+| **Estimated Effort** | 30-60 minutes |
 
-### 3. Status-Driven Workflow Not Implemented
+### 3. End-to-End Automation Not Confirmed
 
 | Detail | Value |
 |--------|-------|
-| **Gap** | Airtable `status` field exists but is not being used to trigger component handoffs |
-| **Impact** | Each component should query for records with specific status values |
-| **Owner** | Team (needs convention decision) |
+| **Gap** | Full chain including Action and Monitoring needs verification for automation |
+| **Impact** | Risk of manual steps breaking the requirement |
+| **Owner** | Team |
 | **Estimated Effort** | 30 minutes |
-
-### 4. No Bad Data Test Records
-
-| Detail | Value |
-|--------|-------|
-| **Gap** | Current 5 test records cover normal and edge cases only |
-| **Impact** | System has not been tested with invalid data, missing fields, or malformed input |
-| **Owner** | Justin Quinones |
-| **Estimated Effort** | 20 minutes |
 
 ---
 
@@ -72,10 +63,8 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 | Issue | Field | Current State | Needed Fix |
 |-------|-------|---------------|------------|
-| Status not driving handoffs | `status` | Set to "New" by Ingestion, but AI Core doesn't watch for this | AI Core should filter/query for `status = "new"` records |
-| No intermediate status | `status` | Only "new", "in_progress", "resolved" | Add "analyzed" status to signal AI Core completion |
-| Typo in schema | `ticked_url` | In Airtable schema | Should be `ticket_url` (one "t") |
-| Convention mismatch | `status` values | Mixed case: "New", "In Progress", "Resolved" | Should be lowercase per conventions |
+| Field name inconsistency | `analyst_notes` | Used in current schema | Should be `analysis_notes` for consistency |
+| Status values not explicit | `status` | Drives handoffs but values not specified | Add explicit values: new, analyzed, in_progress, resolved |
 
 ---
 
@@ -83,18 +72,13 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 ### Priority 1 — Do First (This Week)
 
-1. **Add "analyzed" status value** (5 min) — Update Airtable schema to include intermediate status
-2. **Fix status values to lowercase** (10 min) — Match documented conventions
-3. **Fix `ticked_url` → `ticket_url`** (5 min) — Rename field in Airtable
+1. **Implement basic Action component workflow** (1-2 hours) — n8n workflow to create tickets after Analysis completes
+2. **Test handoff from AI Core to Action** (30-60 minutes) — Verify status-based triggering
+3. **Standardize field name** (15 minutes) — Change `analyst_notes` to `analysis_notes` in Airtable and components
 
-### Priority 2 — Core Functionality
+### Priority 2 — Verification
 
-4. **Build Action component** (60-90 min) — n8n workflow that watches for `status = "analyzed"` and creates ticket
-5. **Add automatic trigger for AI Core** (30-60 min) — Configure n8n to query for `status = "new"` records on schedule
-
-### Priority 3 — Testing
-
-6. **Add bad data test records** (20 min) — Create 2-3 records with missing fields, invalid IPs, malformed payloads
+4. **Run end-to-end test** (30 minutes) — One record through all components without manual intervention
 
 ---
 
@@ -102,11 +86,7 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 | Record Type | Example Values | Purpose |
 |-------------|----------------|---------|
-| **Bad data — missing required field** | `alert_id: "TEST-006", source: "test", severity: null` | Tests validation handling |
-| **Bad data — invalid IP format** | `source_ip: "not-an-ip", destination_ip: "999.999.999.999"` | Tests input sanitization |
-| **Bad data — malformed payload** | `raw_payload: "{ incomplete json"` | Tests error handling |
-| **Edge case — Critical severity** | `severity: "Critical", alert_type: "Ransomware detected"` | Ensures Critical is handled |
-| **Edge case — empty description** | `description: ""` | Tests empty field handling |
+| **Action component test record** | `alert_id: "TEST-007", severity: "critical", description: "Ransomware detected", recommendation: "Isolate affected systems", analyst_notes: "High confidence malware signature", researcher_notes: "Matches known threat patterns"` | Verifies ticket creation in Action component |
 
 ---
 
@@ -114,7 +94,7 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Ingestion  │────▶│  AI Core    │────▶│   Action    │────▶│ Monitoring  │
+│  Ingestion  │────▶│  AI Core    │────▶│ Specialist  │────▶│ Integration │
 │  (Component1)│     │ (Component2)│     │ (Component3)│     │ (Component4)│
 └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
        │                   │                   │                   │
@@ -127,9 +107,9 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 ### Data Flow
 
 1. **Ingestion** → Writes to Airtable with `status = "new"`
-2. **AI Core** → Polls for `status = "new"`, analyzes, writes analysis, sets `status = "analyzed"`
-3. **Action** → Polls for `status = "analyzed"`, creates ticket, sets `status = "in_progress"`
-4. **Monitoring** → Reads all records for dashboard visualization
+2. **AI Core** → Analyzes records with `status = "new"`, writes analysis, sets `status = "analyzed"`
+3. **Specialist** → Creates tickets for `status = "analyzed"`, sets `status = "in_progress"`
+4. **Integration** → Reads all records for dashboard visualization
 
 ---
 
@@ -137,15 +117,15 @@ This document provides a readiness assessment for Checkpoint 2, which requires o
 
 | Action | Owner | Due |
 |--------|-------|-----|
-| Design Action component workflow | Ujjwal Singh | April 27 |
-| Implement status-based triggers | Alexander Lustig | April 28 |
-| Add bad data test cases | Justin Quinones | April 28 |
-| End-to-end test with single record | Team | April 30 |
+| Implement Action component workflow | Ujjwal Singh | May 2 |
+| Test AI Core to Action handoff | Ujjwal Singh | May 3 |
+| Standardize schema field names | Team | May 3 |
+| End-to-end test with single record | Team | May 4 |
 
 ---
 
 ## Conclusion
 
-The project has strong foundations in Ingestion, Analysis, and Monitoring components. The primary risk for Checkpoint 2 is the unimplemented Action component and lack of automatic handoffs. With focused effort this week, the team can achieve the end-to-end flow requirement.
+The project has solid foundations in Ingestion, AI Core, and Integration components, with confirmed handoffs between Ingestion and AI Core. The primary risk for Checkpoint 2 is the unimplemented Specialist component and untested handoff to it. With focused effort this week, the team can achieve the end-to-end flow requirement.
 
-**Recommendation:** Prioritize Action component implementation and status-driven automation immediately. Defer non-essential features until after Checkpoint 2 demonstration.
+**Recommendation:** Prioritize Specialist component implementation and handoff testing immediately. Defer non-essential features until after Checkpoint 2 demonstration.
