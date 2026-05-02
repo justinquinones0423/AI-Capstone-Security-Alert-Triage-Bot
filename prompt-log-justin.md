@@ -7,19 +7,6 @@
 
 ---
 
-## How to Use This Log
-
-Add an entry for each significant AI interaction:
-- Copilot Chat conversations where you asked it to generate, explain, or debug
-something
-- Moments where Copilot was wrong and you had to fix it (these are the most valuable
-entries)
-- Cases where you refined a prompt to get a better result
-
-Don't log: every autocomplete of a bracket or variable name.
-
----
-
 ## 2026-04-23 — What I was trying to do was trying to use the GitHub Copilot to help me create a README for my component which was the Ingestion component.
 
 **Context:** I was on GitHub where I noticed what I had in my component was a little vague and bland and I wanted something that was clear and concise and made sense for the project.
