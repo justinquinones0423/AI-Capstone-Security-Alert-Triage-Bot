@@ -1,8 +1,8 @@
 import requests
 import json
 
-GROQ_API_KEY = "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"
-AIRTABLE_TOKEN = "pat4TEKjHaDy6fXyi.3a2449a91eb923c1c6509eac28b0e78e59479f498af8ee583b940cef16cc1858"
+GROQ_API_KEY = "API_KEY"
+AIRTABLE_TOKEN = "API_KEY"
 BASE_ID = "appdNv0F6L4BbHMDb"
 TABLE_NAME = "Alerts"
 
@@ -14,7 +14,7 @@ GROQ_HEADERS = {
 AIRTABLE_HEADERS = {
     "Authorization": f"Bearer {AIRTABLE_TOKEN}",
     "Content-Type": "application/json"
-}
+} 
 
 def ask_groq(prompt):
     data = {
@@ -37,15 +37,31 @@ def ask_groq(prompt):
     except Exception as e:
         return None, f"Error: {str(e)}"
 
-def get_confidence(recommendation):
+def get_confidence(recommendation, analyst_text, researcher_text):
     if "Escalate" in recommendation:
-        return 0.9
+        base = 0.85
     elif "Monitor" in recommendation:
-        return 0.6
+        base = 0.55
     elif "Close" in recommendation:
-        return 0.8
+        base = 0.75
     else:
-        return 0.5
+        base = 0.5
+
+    total_words = len(analyst_text.split()) + len(researcher_text.split())
+
+    if total_words > 100:
+        bonus = 0.1
+    elif total_words > 60:
+        bonus = 0.05
+    else:
+        bonus = -0.05
+
+    final = base + bonus
+    if final > 1.0:
+        final = 1.0
+    if final < 0.0:
+        final = 0.0
+    return final
 
 def get_alerts():
     response = requests.get(
@@ -59,17 +75,18 @@ def update_airtable(record_id, analyst, researcher, recommendation, confidence=N
         data = {
             "fields": {
                 "status": "error",
-                "error_reasoning": error
+                "error_reason": error,
+                "Confidence Rating": ""
             }
         }
     else:
-        status = "analyzed" if confidence > 0.7 else "needs_review"
+        status = "Analyzed" if confidence > 0.7 else "In Progress"
         data = {
             "fields": {
                 "analyst_notes": analyst,
                 "researcher_notes": researcher,
                 "recommendation": recommendation,
-                "confidence_rating": confidence,
+                "Confidence Rating": str(round(confidence, 2)),
                 "status": status
             }
         }
@@ -133,7 +150,7 @@ Researcher: {researcher}"""
         update_airtable(record_id, analyst, researcher, "", error=rec_err)
         continue
 
-    confidence = get_confidence(recommendation)
+    confidence = get_confidence(recommendation, analyst, researcher)
     print(f"  Confidence: {confidence}")
     update_airtable(record_id, analyst, researcher, recommendation, confidence)
 
