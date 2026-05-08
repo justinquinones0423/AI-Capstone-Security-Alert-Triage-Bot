@@ -108,3 +108,71 @@
 **What I learned:** I was able to learn was how much change there was between the two comparisons.
 
 ---
+
+## 2026-05-02 — Adding Error Handling to Ingestion Workflow
+
+**Context:** The new phase required the workflow to handled malformed input.
+
+**Prompt:** 
+> Write for the n8n logic for the ingestion component: if required fields are missing, set status = "error" and add error_reason. 
+
+**Result:** Copilot was able to generate a branch using and IF node and the Airtable setup.
+
+**Evaluation:** It was able to work perfectly where the bad records are now logged instead of dropped. 
+
+**What I changed:** What I changed was when I added the "error reason" field and tested it with a missing IP record.
+
+**What I learned:** I learned that for my component, it is always best to have a workflow that catches errors from within so that it can be filtered out.
+
+---
+
+## 2026-05-03 — Testing Error Path with Bad Data Input
+
+**Context:** I needed this to confirm that the error handling triggers correctly. 
+
+**Prompt:** 
+> Generate a test record missing a destination IP to trigger an error path.
+
+**Result:** Copilot produced a valid malformed record where the worflow set the status to "error."
+
+**Evaluation:** In the Airtable database, it shows the error_reason with "Missing destination IP."
+
+**What I changed:** I managed to save a screenshot of that error so that I can submit it in a future assignment.
+
+**What I learned:** I learned that through testing, the worflow will show that there will be an error if something specific is not included.
+
+---
+
+## 2026-05-04 — Designing Confidence-Based Routing Logic
+
+**Context:** Although my component doesn't use confidence scores, it would be helpful to see the logic of it.
+
+**Prompt:** 
+> Suggest a routing logic for ingestion based on alert severity: CRITICAL -> immediate notification, LOW -> daily digest.
+
+**Result:** Copilot proposed an IF node for being able to compare severity values. 
+
+**Evaluation:** The implementation was successful and the records route correctly. 
+
+**What I changed:** I set the threshold to "Critical" severity in case for immediate escalation. 
+
+**What I learned:** This can be helpful in order to see the confidence score based on an alert that comes in and that is analyzed. 
+
+---
+
+## 2026-05-06 — Building Error Monitoring Dashboard View
+
+**Context:** I thought it would be helpful to create a seperate dashboard on the side just to see which alerts had an error. 
+
+**Prompt:** 
+> Help me design an Airtable view showing all records with status="error" and grouped by source.
+
+**Result:** Copilot suggested grouping by source and sorting by ingested_at.
+
+**Evaluation:** After creating it, the dashboard clearly shows failed records per component.
+
+**What I changed:**  I created the "Error Monitor" view and added a screenshot in order to submit it in an assignment. 
+
+**What I learned:** I learned that it is helpful to have something that shows the many errors that show up so that they can be filtered and fixed. 
+
+---
