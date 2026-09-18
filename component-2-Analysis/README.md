@@ -49,9 +49,13 @@
     (fed the alert + both prior notes)    
     Output: recommendation (free text)    
   └────────────────────────────────────────┘
+  
        ↓
+       
   Heuristic confidence score (code, not the LLM — see below)
+       
        ↓
+       
   PATCH back to the Airtable record
 
   There is no orchestration layer (no n8n, no queue, no trigger) — the script is a plain `for` loop over every record
