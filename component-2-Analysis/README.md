@@ -31,14 +31,18 @@
      or false positive and why."          
     Output: analyst_notes (free text)     
   └────────────────────────────────────────┘
+  
        ↓
+       
   ┌────────────────────────────────────────┐
     Call 2: Researcher prompt             
     "Add threat intelligence context."    
     (fed the alert + analyst_notes)       
     Output: researcher_notes (free text)  
   └────────────────────────────────────────┘
+  
        ↓
+  
   ┌────────────────────────────────────────┐
     Call 3: Recommender prompt            
     Choose one: Escalate / Monitor / Close
